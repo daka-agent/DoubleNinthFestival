@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>登高 · 重阳</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E5%B1%B1%3C/text%3E%3C/svg%3E">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
@@ -278,7 +279,7 @@ function station(i){
   </section>`;
 }
 
-function top(){
+function summit(){
   app.innerHTML = `
   <section class="screen on">
     <p class="eyebrow">山顶</p>
@@ -297,7 +298,7 @@ function top(){
       <p style="margin-top:16px">打得完的电话，别等到来不及。</p>
     </div>
     <div class="nav">
-      <button onclick="go(9)">回山顶</button>
+      <button onclick="go(9)">往下</button>
       <button onclick="cover()">从头走</button>
     </div>
   </section>`;
@@ -305,7 +306,7 @@ function top(){
 
 function go(i){
   if(i < 0){ cover(); setPath(-1); return; }
-  if(i >= STATIONS.length){ cur = STATIONS.length-1; top(); setPath(STATIONS.length); return; }
+  if(i >= STATIONS.length){ cur = STATIONS.length-1; summit(); setPath(STATIONS.length); return; }
   cur = i;
   station(i);
   setPath(i+1);
