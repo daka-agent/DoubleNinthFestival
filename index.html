@@ -23,21 +23,40 @@ body{
   line-height:1.75;
   overflow-x:hidden;
 }
-#app{max-width:520px;margin:0 auto;min-height:100%;position:relative;padding:0 28px 40px}
 
-/* 山路进度 */
-#path{position:fixed;left:18px;top:50%;transform:translateY(-50%);height:220px;width:2px;background:var(--line);z-index:5}
-#path i{position:absolute;left:0;bottom:0;width:2px;background:var(--ink);height:0;transition:height .6s ease}
-#path b{position:absolute;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--paper);border:1.5px solid var(--ink);bottom:0;transition:bottom .6s ease}
-@media(max-width:560px){#path{display:none}}
+/* 背景山峦：越往上走，山越往下沉 */
+#hill{
+  position:fixed;left:0;right:0;bottom:0;height:46vh;z-index:0;pointer-events:none;
+  opacity:.075;transform:translateY(0);
+  transition:transform 1.1s cubic-bezier(.22,.61,.36,1);
+}
+#hill svg{width:100%;height:100%;display:block}
+
+#app{max-width:520px;margin:0 auto;min-height:100%;position:relative;z-index:1;padding:0 28px 40px}
+
+/* 九折山径 */
+#path{position:fixed;left:10px;top:50%;transform:translateY(-50%);width:44px;height:280px;z-index:5}
+#path svg{width:100%;height:100%;display:block;overflow:visible}
+#ptrack{fill:none;stroke:rgba(44,44,42,.13);stroke-width:1.8}
+#pdone{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+#pdot{fill:var(--cinnabar);transition:cx .8s cubic-bezier(.22,.61,.36,1),cy .8s cubic-bezier(.22,.61,.36,1)}
+#ptop{font-family:inherit;font-size:10px;fill:#9A948A;letter-spacing:.1em}
+@media(max-width:600px){#path{display:none}}
 
 /* 屏 */
-.screen{display:none;min-height:100vh;flex-direction:column;justify-content:center;animation:in .7s ease}
+.screen{display:none;min-height:100vh;flex-direction:column;justify-content:center}
 .screen.on{display:flex}
-@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.screen.on>*{animation:rise .75s cubic-bezier(.22,.61,.36,1) both}
+.screen.on>*:nth-child(2){animation-delay:.05s}
+.screen.on>*:nth-child(3){animation-delay:.1s}
+.screen.on>*:nth-child(4){animation-delay:.15s}
+.screen.on>*:nth-child(5){animation-delay:.2s}
+.screen.on>*:nth-child(6){animation-delay:.25s}
 
 .eyebrow{font-size:12px;letter-spacing:.32em;color:var(--ink3);margin-bottom:20px}
 h1{font-size:38px;font-weight:500;letter-spacing:.1em;line-height:1.3;margin-bottom:22px}
+.ridge{width:100%;height:32px;margin:0 0 26px;border-top:1.5px solid var(--ink);border-radius:50%/100% 100% 0 0;opacity:.18}
 .lede{font-size:15px;color:var(--ink2);line-height:2.1;margin-bottom:40px}
 .lede em{font-style:normal;color:var(--cinnabar)}
 
@@ -50,16 +69,18 @@ button.ghost:hover{border-color:var(--ink)}
 button.ghost:active{background:var(--ink);color:var(--paper)}
 
 /* 站点 */
-.station-no{font-size:12px;letter-spacing:.3em;color:var(--ink3);margin-bottom:26px}
-.figure{width:190px;height:190px;margin:0 auto 30px;display:block}
+.station-no{display:flex;align-items:center;justify-content:center;gap:14px;font-size:12px;letter-spacing:.3em;color:var(--ink3);margin-bottom:26px}
+.station-no i{width:16px;height:1px;background:var(--line)}
+.figure{position:relative;width:190px;height:190px;margin:0 auto 16px}
 .figure svg{width:100%;height:100%;display:block}
+.figure::after{content:"";position:absolute;left:-20%;right:-20%;bottom:-8px;height:20px;
+  border-top:1.5px solid var(--ink);border-radius:50%/100% 100% 0 0;opacity:.16;pointer-events:none}
+.figcap{text-align:center;font-size:11.5px;letter-spacing:.14em;color:var(--ink3);margin-bottom:30px}
 .line{font-size:23px;line-height:1.85;font-weight:500;margin-bottom:14px;letter-spacing:.03em}
 .line2{font-size:14px;color:var(--ink2);line-height:1.9;margin-bottom:18px;padding-left:14px;border-left:2px solid var(--line)}
 .from{font-size:12px;letter-spacing:.18em;color:var(--ink3);margin-bottom:30px}
 
-.know{
-  border-top:1px solid var(--line);padding:18px 0 26px;
-}
+.know{border-top:1px solid var(--line);padding:18px 0 26px}
 .know summary{
   list-style:none;cursor:pointer;font-size:13px;letter-spacing:.2em;color:var(--ink2);
   display:flex;align-items:center;gap:8px;
@@ -67,7 +88,7 @@ button.ghost:active{background:var(--ink);color:var(--paper)}
 .know summary::-webkit-details-marker{display:none}
 .know summary::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--line);transition:.3s}
 .know[open] summary::before{background:var(--cinnabar)}
-.know p{font-size:13.5px;color:var(--ink2);line-height:2;margin-top:14px;animation:in .5s ease}
+.know p{font-size:13.5px;color:var(--ink2);line-height:2;margin-top:14px;animation:rise .5s ease}
 
 .nav{display:flex;gap:12px;margin-top:26px}
 .nav button{flex:1;background:none;border:1px solid var(--line);color:var(--ink);font-family:inherit;
@@ -77,9 +98,7 @@ button.ghost:active{background:var(--ink);color:var(--paper)}
 
 /* 山顶 */
 .top-line{font-size:20px;line-height:2;margin-bottom:26px}
-.call{
-  margin-top:34px;border:1px solid var(--ink);border-radius:2px;padding:22px;
-}
+.call{margin-top:34px;border:1px solid var(--ink);border-radius:2px;padding:22px}
 .call p{font-size:14px;line-height:2;color:var(--ink2)}
 .call strong{color:var(--ink);font-weight:500}
 .tel{margin-top:16px;font-size:13px;color:var(--ink2);line-height:2}
@@ -88,173 +107,316 @@ button.ghost:active{background:var(--ink);color:var(--paper)}
 </head>
 <body>
 
-<div id="path"><i></i><b></b></div>
+<div id="hill">
+  <svg viewBox="0 0 1200 320" preserveAspectRatio="none">
+    <path d="M0 320 L0 236 L110 176 L232 226 L340 148 L470 216 L600 126 L742 210 L860 146 L990 218 L1110 166 L1200 210 L1200 320 Z" fill="#2C2C2A"/>
+  </svg>
+</div>
+
+<div id="path">
+  <svg viewBox="0 0 44 280">
+    <text id="ptop" x="22" y="11" text-anchor="middle">顶</text>
+    <path id="ptrack" d="M22 268 C 36 244, 8 226, 22 202 C 36 178, 8 160, 22 136 C 36 112, 8 94, 22 70 C 32 50, 16 38, 22 24"/>
+    <path id="pdone" d="M22 268 C 36 244, 8 226, 22 202 C 36 178, 8 160, 22 136 C 36 112, 8 94, 22 70 C 32 50, 16 38, 22 24"/>
+    <circle id="pdot" cx="22" cy="268" r="3.2"/>
+  </svg>
+</div>
+
 <div id="app"></div>
 
 <script>
 const STATIONS = [
   {
-    no:"第一站", name:"傅明", from:"《我爱我家》",
+    no:"第一站", alt:"山脚", name:"傅明", from:"《我爱我家》",
+    obj:"一只搪瓷茶缸 · 一副老花镜",
     line:"发挥余热",
     line2:"",
     know:"他原名贾敬贤，1945 年参加革命，离休前是个副局长。退下来那天，局里把他的办公桌挪到了妇联那屋，他回家念叨：要不然，我再到计划生育那去忍忍。<br>演他的文兴宇那年 52 岁，为了像，用白漆把头发染白，染到后来真的白了头。《我爱我家》第一集的名字，就叫《发挥余热》。"
   },
   {
-    no:"第二站", name:"樱友藏", from:"《樱桃小丸子》",
+    no:"第二站", alt:"一折", name:"樱友藏", from:"《樱桃小丸子》",
+    obj:"一张写着地址的卡片 · 一支铅笔",
     line:"我的事情，<br>千万不要忘记，小丸子。",
     line2:"",
     know:"小丸子的爷爷，76 岁，溺爱孙女，什么事都站在她一边。口袋里常揣一张写着地址的卡片，怕自己走丢。<br>他爱写「友藏心之俳句」，这一句是最软的一首——一个已经开始忘事的人，最怕的是被别人忘记。"
   },
   {
-    no:"第三站", name:"老爷爷", from:"《葫芦兄弟》",
+    no:"第三站", alt:"二折", name:"老爷爷", from:"《葫芦兄弟》",
+    obj:"一只藤编背篓 · 一把柴刀",
     line:"孩子，我是你爷爷。",
     line2:"",
     know:"七娃被蛇精迷了心窍，认妖精做父母，转过头来对付自己的六个哥哥。爷爷冲他喊出这句。<br>全片从头到尾，没有人叫过他的名字。他种出七个葫芦娃，最后为夺回七娃的宝葫芦，被蝎子精刺伤坠崖。<br>2026 年，是《葫芦兄弟》开播 40 周年。"
   },
   {
-    no:"第四站", name:"锅炉爷爷", from:"《千与千寻》",
+    no:"第四站", alt:"三折", name:"锅炉爷爷", from:"《千与千寻》",
+    obj:"一把煤铲 · 一张珍藏四十年的车票",
     line:"既然插手要做，<br>就要做到底。",
     line2:"",
     know:"汤屋锅炉房的主管，驼背，有六条能随意伸缩的手臂，一天到晚在干活。<br>千寻来找工做，他嘴上说人手够了，转头却对小玲说：是我的小孙女。<br>片尾他掏出一张珍藏了四十年的车票，给了一个要去远方的孩子。"
   },
   {
-    no:"第五站", name:"拉飞奇", from:"《狮子王》",
+    no:"第五站", alt:"四折 · 半山", name:"拉飞奇", from:"《狮子王》",
+    obj:"一根猴面包木杖 · 一记红手印",
     line:"过去会痛。<br>但你可以逃避，或者从中学习。",
     line2:"",
     know:"荣耀国的老狒狒巫师。辛巴以为是自己害死了父亲，逃走再也不敢回头。<br>拉飞奇一木杖敲醒他：过去是过去，怎么对待它，是你自己选的。<br>原句：Oh yes, the past can hurt. But the way I see it, you can either run from it, or learn from it."
   },
   {
-    no:"第六站", name:"乌龟大师", from:"《功夫熊猫》",
+    no:"第六站", alt:"五折", name:"乌龟大师", from:"《功夫熊猫》",
+    obj:"一根木拐杖 · 三两瓣落下的桃花",
     line:"昨天是历史，<br>明天是谜团，今天是礼物。",
     line2:"",
     know:"原句：Yesterday is history, tomorrow is a mystery, but today is a gift. That is why it is called the present.<br>他走的那天，留下的最后一句是：You must believe.（你要相信。）"
   },
   {
-    no:"第七站", name:"花弧", from:"《花木兰》",
+    no:"第七站", alt:"六折", name:"花弧", from:"《花木兰》",
+    obj:"一把家传的剑 · 一卷征兵诏令",
     line:"花家最大的荣耀，<br>就是有你这个女儿。",
     line2:"",
     know:"木兰的父亲，年迈仍在征兵之列，木兰代他从军。<br>这句是她回来那一天他说的。原句：The greatest gift and honor is having you for a daughter."
   },
   {
-    no:"第八站", name:"白胡子", from:"《海贼王》",
+    no:"第八站", alt:"七折", name:"白胡子", from:"《海贼王》",
+    obj:"一柄薙刀 · 一壶还没喝完的酒",
     line:"全员都要活下去！<br>平安无事地回到新世界！",
     line2:"只要上了我的船，再怎么样的笨蛋也是我的孩子。",
     know:"这是他最后的船长命令。他站着死去，全身刀伤 267 处、子弹 152 发、炮弹 46 枚，背后一处都没有——他说过，这是一个男人的骄傲。<br>船员都叫他「老爹」。他们多半是被世界扔掉的人，是他先认下了他们。他不要财宝，他想要的从来就只是一个家。"
   },
   {
-    no:"第九站", name:"卡尔", from:"《飞屋环游记》",
+    no:"第九站", alt:"八折", name:"卡尔", from:"《飞屋环游记》",
+    obj:"两把椅子，一把已经空了 · 一只飘远的气球",
     line:"它只是座房子。",
     line2:"",
     know:"艾莉先走了。她在冒险手册的最后一页写：谢谢你陪我走过这一程，去展开下一段属于你的冒险吧。<br>很多年后，卡尔把挂满气球的房子放走的时候，说了这句。房子没了又怎样——他们一起走完的这一生，才是那场冒险。"
   },
   {
-    no:"山顶", name:"可可", from:"《寻梦环游记》",
+    no:"第十站", alt:"九折 · 将至山顶", name:"可可", from:"《寻梦环游记》",
+    obj:"一张摆在家里的照片 · 一朵万寿菊 · 一支蜡烛",
     line:"真正的死亡，<br>是世界上再没有一个人记得你。",
     line2:"",
     know:"原句：The real death is that no one in the world remembers you.<br>除夕、清明、中元、重阳，是中国四大祭祖节。前三个敬的都是先人，只有重阳敬的是还活着的人。<br>所以趁他还在——记得他。"
   }
 ];
 
-const CN = ["","一","二","三","四","五","六","七","八","九","十"];
-
-/* 墨色物件剪影 */
+/* 墨色物件剪影：不出现角色形象，只画与他相关的物件 */
 const FIG = [
+/* 一 · 傅明：搪瓷茶缸 + 老花镜 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M62 44 L100 30 L138 44" />
-<path d="M100 30 L100 62" />
-<path d="M62 44 L58 96 L76 104 L100 96 L124 104 L142 96 L138 44" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M100 96 L100 150" />
-<rect x="126" y="132" width="40" height="34" rx="3" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M166 140 q10 4 0 12" />
-<path d="M132 132 L132 126" />
+<path d="M100 46 L100 54"/>
+<circle cx="100" cy="42" r="5.5" fill="#2C2C2A" fill-opacity=".1"/>
+<path d="M70 54 L130 54 L130 65 L70 65 Z" fill="#2C2C2A" fill-opacity=".07"/>
+<path d="M70 65 L72 148 Q100 156 128 148 L130 65 Z" fill="#2C2C2A" fill-opacity=".05"/>
+<path d="M70 77 L129 77" stroke-width="1.8"/>
+<path d="M71 85 L128 85" stroke-width="1.8"/>
+<path d="M100 100 L103.65 109.99 L114.27 110.36 L105.9 116.92 L108.82 127.14 L100 121.2 L91.18 127.14 L94.1 116.92 L85.73 110.36 L96.35 109.99 Z" fill="#2C2C2A" fill-opacity=".13"/>
+<path d="M130 88 q22 6 22 25 q0 19 -22 25"/>
+<path d="M74 148 Q100 156 126 148" stroke-width="1.6"/>
+<g transform="translate(100 177)">
+  <ellipse cx="-21" cy="0" rx="17" ry="12" fill="#2C2C2A" fill-opacity=".05"/>
+  <ellipse cx="21" cy="0" rx="17" ry="12" fill="#2C2C2A" fill-opacity=".05"/>
+  <path d="M-5 -2 q5 -5 10 0"/>
+  <path d="M-38 -5 L-53 -13 M38 -5 L53 -13" stroke-width="2"/>
+</g>
 </svg>`,
+/* 二 · 樱友藏：写着地址的卡片 + 铅笔 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M40 96 q60 -46 120 0" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M56 96 q44 -30 88 0" />
-<path d="M100 96 L100 158" />
-<rect x="78" y="150" width="44" height="28" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M84 158 L116 158" />
-<path d="M84 166 L106 166" />
+<g transform="rotate(-8 80 104)">
+  <rect x="38" y="62" width="86" height="84" rx="3" fill="#2C2C2A" fill-opacity=".05"/>
+  <circle cx="112" cy="74" r="4" fill="#2C2C2A" fill-opacity=".16"/>
+  <path d="M50 88 L98 88" stroke-width="3.4"/>
+  <path d="M50 104 L118 104 M50 116 L112 116 M50 128 L116 128" stroke-width="1.8"/>
+  <path d="M50 142 L60 133 L70 142 L70 148 L50 148 Z" fill="#2C2C2A" fill-opacity=".06"/>
+  <path d="M80 141 L108 141 M102 136 L108 141 L102 146" stroke-width="1.6"/>
+</g>
+<g transform="rotate(14 156 118)">
+  <rect x="149" y="80" width="14" height="10" rx="2" fill="#2C2C2A" fill-opacity=".08"/>
+  <path d="M149 90 L163 90 L163 96 L149 96 Z" fill="#2C2C2A" fill-opacity=".07"/>
+  <path d="M149 96 L163 96 L163 146 L156 158 L149 146 Z" fill="#2C2C2A" fill-opacity=".05"/>
+  <path d="M156 98 L156 146" stroke-width="1.2" stroke-opacity=".45"/>
+  <path d="M151 148 L156 156 L161 148 Z" fill="#2C2C2A" fill-opacity=".22"/>
+</g>
 </svg>`,
+/* 三 · 老爷爷：藤编背篓 + 柴刀 + 采来的草药 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M100 52 q-22 0 -22 22 q0 20 22 24 q22 -4 22 -24 q0 -22 -22 -22z" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M100 98 L100 128" />
-<path d="M70 128 L130 128 L124 172 L76 172 Z" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M78 128 q22 -14 44 0" />
-<path d="M100 52 L100 34" />
-<path d="M100 34 q10 -8 18 2" />
+<path d="M78 62 q-12 -24 -24 -36" stroke-width="2"/>
+<path d="M70 46 q-15 -3 -19 -12 q13 -2 19 7 Z" fill="#2C2C2A" fill-opacity=".05" stroke-width="1.6"/>
+<path d="M62 32 q-11 3 -15 -5 q11 -5 15 1 Z" fill="#2C2C2A" fill-opacity=".05" stroke-width="1.6"/>
+<path d="M86 62 q6 -28 18 -40" stroke-width="2"/>
+<path d="M94 42 q15 -5 21 -14 q-13 -2 -21 8 Z" fill="#2C2C2A" fill-opacity=".05" stroke-width="1.6"/>
+<path d="M56 66 L64 156 Q98 166 132 156 L140 66 Z" fill="#2C2C2A" fill-opacity=".05"/>
+<ellipse cx="98" cy="66" rx="42" ry="10" fill="#2C2C2A" fill-opacity=".09"/>
+<ellipse cx="98" cy="66" rx="42" ry="10" stroke-width="1.6" fill="none"/>
+<path d="M60 92 Q98 100 136 92" stroke-width="1.7"/>
+<path d="M63 116 Q98 124 133 116" stroke-width="1.7"/>
+<path d="M66 140 Q98 148 130 140" stroke-width="1.7"/>
+<path d="M74 80 L94 92 M94 80 L74 92 M108 80 L128 92 M128 80 L108 92" stroke-width="1.3" stroke-opacity=".45"/>
+<path d="M76 104 L96 116 M96 104 L76 116 M110 104 L130 116 M130 104 L110 116" stroke-width="1.3" stroke-opacity=".45"/>
+<path d="M62 62 q-17 16 -9 35" stroke-width="1.8"/>
+<path d="M134 62 q17 16 9 35" stroke-width="1.8"/>
+<path d="M140 96 L149 120" stroke-width="2.6"/>
+<path d="M149 120 L174 112 L178 127 L149 131 Z" fill="#2C2C2A" fill-opacity=".08"/>
+<path d="M152 120 L172 114" stroke-width="1.3" stroke-opacity=".4"/>
 </svg>`,
+/* 四 · 锅炉爷爷：煤铲 + 珍藏四十年的车票 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M100 58 q-20 0 -20 20 q0 18 20 22 q20 -4 20 -22 q0 -20 -20 -20z" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M100 100 L100 128" />
-<path d="M52 118 L148 118" />
-<path d="M52 118 L44 132 M72 118 L64 136 M100 118 L100 138 M128 118 L136 136 M148 118 L156 132" />
-<rect x="70" y="146" width="60" height="26" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M78 154 L122 154 M78 162 L110 162" />
+<path d="M92 30 q8 -11 16 0"/>
+<path d="M100 38 L100 116" stroke-width="3.2"/>
+<path d="M84 116 L116 116 L122 158 L78 158 Z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M78 158 Q100 169 122 158"/>
+<path d="M84 148 L116 148" stroke-width="1.5" stroke-opacity=".45"/>
+<path d="M90 132 L100 124 L110 134 L101 143 Z" fill="#2C2C2A" fill-opacity=".11"/>
+<path d="M104 120 L117 116 L121 128 L108 133 Z" fill="#2C2C2A" fill-opacity=".11"/>
+<g transform="rotate(-15 147 65)">
+  <rect x="118" y="43" width="58" height="42" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
+  <path d="M126 54 L160 54" stroke-width="3"/>
+  <path d="M118 62 L176 62" stroke-width="1.5" stroke-dasharray="4 4" stroke-opacity=".55"/>
+  <path d="M126 71 L152 71 M126 79 L158 79" stroke-width="1.6"/>
+  <circle cx="167" cy="75" r="4" stroke-width="1.6"/>
+  <path d="M176 43 L168 43 L176 51 Z" fill="#2C2C2A" fill-opacity=".12"/>
+</g>
 </svg>`,
+/* 五 · 拉飞奇：猴面包木杖 + 一记红手印 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M138 40 L74 168" />
-<path d="M138 40 q14 -10 20 2 q-12 12 -20 -2z" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M126 62 q-14 8 -22 2" />
-<path d="M110 94 q14 8 22 2" />
-<path d="M96 126 q-14 8 -22 2" />
+<path d="M104 68 q-9 30 1 58 q9 24 1 44" stroke-width="3"/>
+<path d="M104 40 q-26 -3 -23 16 q3 15 23 12 Z" fill="#2C2C2A" fill-opacity=".07"/>
+<path d="M104 26 L104 40" stroke-width="2.6"/>
+<path d="M101 96 q-13 -1 -15 -11" stroke-width="1.8"/>
+<path d="M106 132 q13 -1 15 -11" stroke-width="1.8"/>
+<path d="M100 78 q-11 7 -9 15" stroke-width="1.5" stroke-opacity=".6"/>
+<circle cx="86" cy="106" r="7" fill="#2C2C2A" fill-opacity=".07" stroke-width="1.6"/>
+<circle cx="86" cy="120" r="11" fill="#2C2C2A" fill-opacity=".07" stroke-width="1.6"/>
+<path d="M82 95 L90 95" stroke-width="2"/>
+<path d="M106 170 L101 180" stroke-width="2.6"/>
+<g stroke="#B44A3C" stroke-opacity=".5" stroke-width="7.5" stroke-linecap="round" fill="none">
+  <path d="M132 148 q-14 2 -17 12"/>
+  <path d="M142 149 L139 124"/>
+  <path d="M152 147 L152 118"/>
+  <path d="M162 148 L164 123"/>
+  <path d="M170 152 L176 136"/>
+</g>
+<ellipse cx="153" cy="159" rx="18" ry="12" fill="#B44A3C" fill-opacity=".26" stroke="none"/>
 </svg>`,
+/* 六 · 乌龟大师：木拐杖 + 落下的桃花 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M126 46 L126 166" />
-<path d="M126 46 q-10 -14 2 -20 q10 8 8 20" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M126 78 q18 -10 26 4" />
-<circle cx="70" cy="112" r="30" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M70 82 L70 142 M40 112 L100 112" />
+<path d="M70 46 q-27 2 -21 21 q6 15 21 7 Z" fill="#2C2C2A" fill-opacity=".08"/>
+<path d="M70 46 L86 172" stroke-width="3.4"/>
+<path d="M78 92 q-14 -1 -16 -11" stroke-width="1.8"/>
+<path d="M84 132 q14 -1 16 -11" stroke-width="1.8"/>
+<path d="M88 172 L83 181" stroke-width="2.6"/>
+<g transform="translate(152 68)" stroke-width="1.6">
+  <ellipse cy="-13" rx="6.5" ry="10" fill="#2C2C2A" fill-opacity=".07"/>
+  <ellipse cy="-13" rx="6.5" ry="10" fill="#2C2C2A" fill-opacity=".07" transform="rotate(72)"/>
+  <ellipse cy="-13" rx="6.5" ry="10" fill="#2C2C2A" fill-opacity=".07" transform="rotate(144)"/>
+  <ellipse cy="-13" rx="6.5" ry="10" fill="#2C2C2A" fill-opacity=".07" transform="rotate(216)"/>
+  <ellipse cy="-13" rx="6.5" ry="10" fill="#2C2C2A" fill-opacity=".07" transform="rotate(288)"/>
+  <circle r="3.6" fill="#2C2C2A" fill-opacity=".2"/>
+</g>
+<path d="M147 86 q-9 17 -19 28" stroke-width="1.2" stroke-dasharray="3 5" stroke-opacity=".4"/>
+<path d="M60 120 q-11 -8 -3 -18 q6 -4 9 2 q5 -5 9 1 q8 10 -3 18 q-6 3 -12 -3 Z" fill="#2C2C2A" fill-opacity=".07" stroke-width="1.6"/>
+<path d="M118 152 q-10 -7 -3 -17 q5 -4 9 1 q5 -5 9 0 q7 9 -3 17 q-6 3 -12 -1 Z" fill="#2C2C2A" fill-opacity=".07" stroke-width="1.6"/>
 </svg>`,
+/* 七 · 花弧：家传的剑 + 征兵诏令 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M132 44 L132 170" />
-<path d="M132 44 q-12 -12 -2 -18 q10 6 10 18" fill="#2C2C2A" fill-opacity=".06"/>
-<circle cx="76" cy="98" r="12" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M76 110 L76 152" />
-<path d="M76 128 q-20 -6 -26 -22 M76 138 q20 -6 26 -22" />
-<path d="M44 152 q32 -12 64 0" />
+<g transform="rotate(34 100 96)">
+  <path d="M100 40 L106 58 L106 128 L94 128 L94 58 Z" fill="#2C2C2A" fill-opacity=".07"/>
+  <path d="M100 46 L100 128" stroke-width="1.3" stroke-opacity=".4"/>
+  <path d="M80 128 L120 128 L117 137 L83 137 Z" fill="#2C2C2A" fill-opacity=".13"/>
+  <path d="M93 137 L107 137 L107 166 L93 166 Z" fill="#2C2C2A" fill-opacity=".06"/>
+  <path d="M93 143 L107 143 M93 150 L107 150 M93 157 L107 157" stroke-width="1.3" stroke-opacity=".45"/>
+  <path d="M93 166 q7 9 14 0 Z" fill="#2C2C2A" fill-opacity=".1"/>
+</g>
+<g transform="rotate(-10 147 160)">
+  <rect x="117" y="148" width="60" height="24" rx="10" fill="#2C2C2A" fill-opacity=".06"/>
+  <circle cx="127" cy="160" r="8" fill="#2C2C2A" fill-opacity=".05"/>
+  <circle cx="167" cy="160" r="8" fill="#2C2C2A" fill-opacity=".05"/>
+  <path d="M147 148 L147 172" stroke-width="1.5" stroke-opacity=".5"/>
+  <path d="M143 153 q4 7 8 0" stroke-width="1.4"/>
+</g>
 </svg>`,
+/* 八 · 白胡子：薙刀 + 一壶酒 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M100 34 L100 168" />
-<path d="M100 34 q22 -10 30 6 q-16 8 -30 -6z" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M86 60 L114 60" />
-<path d="M100 168 L88 182 L112 182 Z" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M46 92 q54 -14 108 0" />
-<path d="M46 92 q54 14 108 0" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M76 48 L76 166" stroke-width="4"/>
+<path d="M70 62 L82 62 M70 156 L82 156" stroke-width="1.8"/>
+<path d="M70 168 L82 168" stroke-width="3"/>
+<path d="M73 48 C71 26, 80 6, 108 2 L110 11 C88 16, 81 30, 81 50 Z" fill="#2C2C2A" fill-opacity=".09"/>
+<path d="M74 44 C72 26, 80 10, 104 6" stroke-width="1.2" stroke-opacity=".4"/>
+<ellipse cx="146" cy="150" rx="24" ry="20" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M138 132 L136 116 L156 116 L154 132 Z" fill="#2C2C2A" fill-opacity=".05"/>
+<ellipse cx="146" cy="114" rx="11" ry="4.5" fill="#2C2C2A" fill-opacity=".08"/>
+<path d="M170 138 q13 6 11 18 q-2 11 -13 11" stroke-width="2"/>
+<path d="M88 176 q16 -18 32 0 Z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M88 176 L120 176" stroke-width="1.6"/>
+<path d="M96 162 L112 162" stroke-width="1.2" stroke-opacity=".4"/>
 </svg>`,
+/* 九 · 卡尔：两把椅子，一把空了 + 飘远的气球 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M100 30 q-16 0 -16 16 q0 14 16 18 q16 -4 16 -18 q0 -16 -16 -16z" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M100 64 L62 122" />
-<path d="M100 64 L138 122" />
-<rect x="56" y="126" width="40" height="46" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M56 148 L96 148 M70 126 L70 172" />
-<rect x="112" y="126" width="40" height="46" rx="2" stroke-dasharray="5 5"/>
-<path d="M112 148 L152 148 M126 126 L126 172" stroke-dasharray="5 5"/>
+<defs>
+<g id="ch">
+  <path d="M62 130 L44 172"/>
+  <path d="M86 130 L84 172"/>
+  <path d="M58 130 L90 130"/>
+  <path d="M58 130 L44 92"/>
+  <path d="M50 114 L61 111 M47 104 L58 101 M45 95 L56 92" stroke-width="1.6"/>
+  <path d="M62 112 L92 112 L90 130"/>
+</g>
+</defs>
+<ellipse cx="140" cy="52" rx="18" ry="22" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M140 74 L135 82 L145 82 Z" fill="#2C2C2A" fill-opacity=".12"/>
+<path d="M140 82 q8 15 2 28" stroke-width="1.2" stroke-opacity=".45"/>
+<use href="#ch" x="-6" fill="#2C2C2A" fill-opacity=".05"/>
+<use href="#ch" x="52" stroke-dasharray="5 6"/>
 </svg>`,
+/* 十 · 可可：家里的照片 + 万寿菊 + 一支蜡烛 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<rect x="46" y="46" width="108" height="88" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M46 46 L154 134 M154 46 L46 134" stroke-width="1.2" stroke-opacity=".4"/>
-<circle cx="100" cy="76" r="12" fill="#2C2C2A" fill-opacity=".1"/>
-<path d="M78 116 q22 -22 44 0" fill="#2C2C2A" fill-opacity=".1"/>
-<path d="M100 134 L100 174" />
-<path d="M82 174 L118 174" />
+<rect x="54" y="52" width="82" height="88" rx="3" fill="#2C2C2A" fill-opacity=".05"/>
+<rect x="62" y="60" width="66" height="64" rx="2" stroke-width="1.6"/>
+<circle cx="95" cy="86" r="15" fill="#2C2C2A" fill-opacity=".09" stroke-width="1.6"/>
+<path d="M75 122 q20 -30 40 0 Z" fill="#2C2C2A" fill-opacity=".09" stroke-width="1.6"/>
+<path d="M95 140 L95 150 M95 150 L80 164 M95 150 L110 164" stroke-width="1.8"/>
+<path d="M30 96 L44 96 L44 150 L30 150 Z" fill="#2C2C2A" fill-opacity=".05"/>
+<path d="M32 110 q6 4 0 9 q-4 3 0 6" stroke-width="1.2" stroke-opacity=".45"/>
+<path d="M26 150 L48 150" stroke-width="2.4"/>
+<path d="M37 90 q-7 6 -3 12 q1 -8 5 -12 Z" fill="#2C2C2A" fill-opacity=".16" stroke-width="1.6"/>
+<g transform="translate(148 154)" stroke-width="1.5" fill="#2C2C2A" fill-opacity=".07">
+  <ellipse cy="-12" rx="5" ry="9"/>
+  <ellipse cy="-12" rx="5" ry="9" transform="rotate(45)"/>
+  <ellipse cy="-12" rx="5" ry="9" transform="rotate(90)"/>
+  <ellipse cy="-12" rx="5" ry="9" transform="rotate(135)"/>
+  <ellipse cy="-12" rx="5" ry="9" transform="rotate(180)"/>
+  <ellipse cy="-12" rx="5" ry="9" transform="rotate(225)"/>
+  <ellipse cy="-12" rx="5" ry="9" transform="rotate(270)"/>
+  <ellipse cy="-12" rx="5" ry="9" transform="rotate(315)"/>
+</g>
+<circle cx="148" cy="154" r="4" fill="#2C2C2A" fill-opacity=".2" stroke="none"/>
+<circle cx="68" cy="172" r="3.5" fill="#2C2C2A" fill-opacity=".12" stroke="none"/>
+<circle cx="86" cy="179" r="3" fill="#2C2C2A" fill-opacity=".12" stroke="none"/>
+<circle cx="112" cy="174" r="3.5" fill="#2C2C2A" fill-opacity=".12" stroke="none"/>
+<circle cx="58" cy="180" r="2.5" fill="#2C2C2A" fill-opacity=".12" stroke="none"/>
 </svg>`
 ];
 
 let cur = -1;
 const app = document.getElementById('app');
+const hill = document.getElementById('hill');
+const pDone = document.getElementById('pdone');
+const pDot = document.getElementById('pdot');
+let pLen = 0;
+try { pLen = pDone.getTotalLength(); } catch (e) { pLen = 0; }
 
 function cover(){
   app.innerHTML = `
   <section class="screen on">
     <p class="eyebrow">农历九月初九 · 重阳</p>
     <h1>登高</h1>
+    <div class="ridge"></div>
     <p class="lede">九月初九，两九相重，故曰重阳。<br>
     古人在这一天登高、插茱萸、饮菊花酒，<br>
     后来这一天成了<em>老人节</em>。<br><br>
     除夕、清明、中元、重阳，是中国的四大祭祖节。<br>
     前三个敬的都是先人，<br>
-    只有重阳，敬的是<em>还活着的人</em>。</p>
+    只有重阳，敬的是<em>还活着的人</em>。<br><br>
+    今天走一趟<em>九折山路</em>。<br>
+    路上有十个老人，你从小就认得他们。</p>
     <button class="ghost" onclick="go(0)">往上走</button>
   </section>`;
 }
@@ -263,8 +425,9 @@ function station(i){
   const s = STATIONS[i];
   app.innerHTML = `
   <section class="screen on">
-    <p class="station-no">${s.no} · 共十站</p>
+    <p class="station-no"><span>${s.no}</span><i></i><span>${s.alt}</span></p>
     <div class="figure">${FIG[i]}</div>
+    <p class="figcap">${s.obj}</p>
     <p class="line">${s.line}</p>
     ${s.line2?`<p class="line2">${s.line2}</p>`:''}
     <p class="from">${s.from} · ${s.name}</p>
@@ -274,7 +437,7 @@ function station(i){
     </details>
     <div class="nav">
       <button onclick="go(${i-1})" ${i===0?'disabled':''}>往下</button>
-      <button onclick="go(${i+1})">${i===STATIONS.length-1?'登顶':'往上'}</button>
+      <button onclick="go(${i+1})">${i===STATIONS.length-1?'到山顶':'往上'}</button>
     </div>
   </section>`;
 }
@@ -284,6 +447,7 @@ function summit(){
   <section class="screen on">
     <p class="eyebrow">山顶</p>
     <h1>趁他还在</h1>
+    <div class="ridge"></div>
     <p class="top-line">十个老人，十句话。<br>
     他们要的都不是同情，<br>
     是<em>你认得他，你记得他</em>。</p>
@@ -314,9 +478,18 @@ function go(i){
 
 function setPath(step){
   const total = STATIONS.length;
-  const pct = Math.max(0, Math.min(1, step/total)) * 100;
-  document.querySelector('#path i').style.height = pct + '%';
-  document.querySelector('#path b').style.bottom = pct + '%';
+  const pct = Math.max(0, Math.min(1, step/total));
+  if(pLen > 0){
+    pDone.style.strokeDasharray = pLen;
+    pDone.style.strokeDashoffset = pLen * (1 - pct);
+    try {
+      const pt = pDone.getPointAtLength(pLen * pct);
+      pDot.setAttribute('cx', pt.x.toFixed(2));
+      pDot.setAttribute('cy', pt.y.toFixed(2));
+    } catch (e) {}
+  }
+  /* 人往上走，山往下沉 */
+  hill.style.transform = 'translateY(' + (pct * 74).toFixed(1) + 'px)';
 }
 
 /* 滑动翻页 */
