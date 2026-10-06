@@ -157,7 +157,7 @@ const STATIONS = [
   },
   {
     no:"第三站", alt:"二折", name:"老爷爷", from:"《葫芦兄弟》",
-    obj:"一只藤编背篓 · 一把砍柴的弯刀",
+    obj:"一只藤编背篓 · 一把砍柴用的柴刀",
     line:"孩子，我是你爷爷。",
     line2:"",
     know:"七娃被蛇精迷了心窍，认妖精做父母，转过头来对付自己的六个哥哥。爷爷冲他喊出这句。<br>全片从头到尾，没有人叫过他的名字。他种出七个葫芦娃，最后为夺回七娃的宝葫芦，被蝎子精刺伤坠崖。<br>2026 年，是《葫芦兄弟》开播 40 周年。"
@@ -171,14 +171,14 @@ const STATIONS = [
   },
   {
     no:"第五站", alt:"四折 · 半山", name:"拉飞奇", from:"《狮子王》",
-    obj:"一根猴面包树根做的木杖 · 一记朱红的手印",
+    obj:"一根多节的长木杖，杖头系着葫芦 · 一记朱红的手印",
     line:"过去会痛。<br>但你可以逃避，或者从中学习。",
     line2:"",
     know:"荣耀国的老狒狒巫师。辛巴以为是自己害死了父亲，逃走再也不敢回头。<br>拉飞奇一木杖敲醒他：过去是过去，怎么对待它，是你自己选的。<br>原句：Oh yes, the past can hurt. But the way I see it, you can either run from it, or learn from it."
   },
   {
     no:"第六站", alt:"五折", name:"乌龟大师", from:"《功夫熊猫》",
-    obj:"一根弯头的木拐杖 · 三两瓣落下的桃花",
+    obj:"一根桃木长杖，杖头分作两叉 · 三两瓣落下的桃花",
     line:"昨天是历史，<br>明天是谜团，今天是礼物。",
     line2:"",
     know:"原句：Yesterday is history, tomorrow is a mystery, but today is a gift. That is why it is called the present.<br>他走的那天，留下的最后一句是：You must believe.（你要相信。）"
@@ -192,7 +192,7 @@ const STATIONS = [
   },
   {
     no:"第八站", alt:"七折", name:"白胡子", from:"《海贼王》",
-    obj:"一柄薙刀 · 一壶还没喝完的酒",
+    obj:"一柄条纹长杆的薙刀 · 一壶还没喝完的酒",
     line:"全员都要活下去！<br>平安无事地回到新世界！",
     line2:"只要上了我的船，再怎么样的笨蛋也是我的孩子。",
     know:"这是他最后的船长命令。他站着死去，全身刀伤 267 处、子弹 152 发、炮弹 46 枚，背后一处都没有——他说过，这是一个男人的骄傲。<br>船员都叫他「老爹」。他们多半是被世界扔掉的人，是他先认下了他们。他不要财宝，他想要的从来就只是一个家。"
@@ -274,9 +274,16 @@ const FIG = [
 <path d="M64 58 q32 -20 64 0" stroke-width="2.6"/>
 <path d="M64 58 q-14 12 -12 30" stroke-width="2"/>
 <path d="M128 58 q14 12 12 30" stroke-width="2"/>
-<path d="M142 88 L154 112" stroke-width="3.4"/>
-<path d="M152 110 C172 108, 186 124, 180 142 C172 132, 162 124, 150 122 Z" fill="#2C2C2A" fill-opacity=".09"/>
-<path d="M155 116 C170 116, 180 126, 177 138" stroke-width="1.2" stroke-opacity=".45"/>
+<g transform="translate(140 156) rotate(-50) scale(0.7)">
+  <path d="M2 -8 L34 -8 Q38 -8 38 -4 L38 4 Q38 8 34 8 L2 8 Q-1 8 -1 4 L-1 -4 Q-1 -8 2 -8 Z" fill="#2C2C2A" fill-opacity=".07"/>
+  <path d="M30 -8 L30 8" stroke-width="1.7"/>
+  <path d="M7 -8 L7 8" stroke-width="1.3" stroke-opacity=".5"/>
+  <path d="M36 -5 C60 -7, 82 -8, 96 -8 L104 -15 C100 -3, 94 4, 88 5 C70 10, 50 9, 36 5 Z" fill="#2C2C2A" fill-opacity=".09"/>
+  <path d="M38 2 C56 7, 76 7, 94 2" stroke-width="1.2" stroke-opacity=".45"/>
+  <path d="M38 -3 C60 -5, 82 -5, 96 -6" stroke-width="1.1" stroke-opacity=".3"/>
+  <circle cx="45" cy="0" r="1.8" fill="#2C2C2A" fill-opacity=".16" stroke-width="1"/>
+  <circle cx="57" cy="0" r="1.8" fill="#2C2C2A" fill-opacity=".16" stroke-width="1"/>
+</g>
 </svg>`,
 /* 四 · 锅炉爷爷：一把煤铲 + 一张珍藏四十年的车票 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -302,34 +309,40 @@ const FIG = [
 </svg>`,
 /* 五 · 拉飞奇：猴面包树根做的木杖（挂着葫芦）+ 一记朱红的手印 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M96 178 C88 150, 85 118, 90 80 C92 58, 94 44, 96 30 L113 32 C110 50, 110 64, 110 84 C110 114, 106 148, 110 178 Z" fill="#2C2C2A" fill-opacity=".06"/>
-<path d="M97 30 q-15 -9 -17 -24 q7 -9 20 3 Z" fill="#2C2C2A" fill-opacity=".08"/>
-<path d="M112 31 q15 -6 19 -21 q-9 -7 -21 3 Z" fill="#2C2C2A" fill-opacity=".08"/>
-<ellipse cx="99" cy="86" rx="5" ry="8" fill="#2C2C2A" fill-opacity=".1" stroke-width="1.4"/>
-<ellipse cx="105" cy="136" rx="4.5" ry="7" fill="#2C2C2A" fill-opacity=".1" stroke-width="1.4"/>
-<path d="M96 96 q-12 8 -10 17" stroke-width="1.5" stroke-opacity=".55"/>
-<circle cx="82" cy="112" r="7.5" fill="#2C2C2A" fill-opacity=".08" stroke-width="1.6"/>
-<circle cx="82" cy="127" r="11.5" fill="#2C2C2A" fill-opacity=".08" stroke-width="1.6"/>
-<path d="M78 100 L86 100" stroke-width="2"/>
-<g stroke="#B44A3C" stroke-opacity=".52" stroke-width="8.5" stroke-linecap="round" fill="none">
-  <path d="M140 152 q-15 4 -18 15"/>
-  <path d="M146 154 L142 122"/>
-  <path d="M154 154 L154 118"/>
-  <path d="M162 154 L165 124"/>
-  <path d="M169 156 L176 138"/>
+<path d="M62 26 C58 34, 60 44, 63 54 C60 80, 66 112, 62 140 C59 158, 62 172, 66 184 L80 184 C83 172, 80 158, 78 140 C82 112, 76 80, 78 54 C81 44, 78 34, 74 26 C70 20, 66 20, 62 26 Z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M58 42 q-10 -6 -14 -16" stroke-width="2.2"/>
+<path d="M46 26 q-8 -1 -11 -8 q9 -3 13 3 Z" fill="#2C2C2A" fill-opacity=".06" stroke-width="1.5"/>
+<ellipse cx="70" cy="98" rx="5" ry="8" fill="#2C2C2A" fill-opacity=".09" stroke-width="1.4"/>
+<ellipse cx="68" cy="152" rx="4.5" ry="7" fill="#2C2C2A" fill-opacity=".09" stroke-width="1.4"/>
+<path d="M63 120 q-10 7 -9 16" stroke-width="1.5" stroke-opacity=".5"/>
+<path d="M66 62 C69 84, 65 108, 68 132" stroke-width="1.1" stroke-opacity=".35"/>
+<path d="M76 70 C78 92, 74 116, 76 140" stroke-width="1.1" stroke-opacity=".28"/>
+<path d="M60 49 L78 48 M61 55 L77 54" stroke-width="1.6" stroke-opacity=".5"/>
+<path d="M66 52 C76 62, 86 60, 95 57" stroke-width="1.6"/>
+<g transform="translate(100 80)">
+  <path d="M0 -16 q2 -6 1 -12" stroke-width="1.8"/>
+  <path d="M-3 -28 q6 -2 5 4" stroke-width="1.5"/>
+  <path d="M1 -16 C-7 -16, -11 -11, -10 -5 C-6 -1, -7 3, -11 7 C-17 12, -15 23, -7 26 C1 29, 10 26, 13 18 C16 10, 10 4, 6 1 C3 -2, 7 -6, 10 -11 C11 -17, 7 -16, 1 -16 Z" fill="#2C2C2A" fill-opacity=".07"/>
+  <path d="M-8 8 q-5 6 -3 14" stroke-width="1.1" stroke-opacity=".42"/>
+  <path d="M8 6 q5 6 3 14" stroke-width="1.1" stroke-opacity=".32"/>
 </g>
-<ellipse cx="154" cy="160" rx="20" ry="14" fill="#B44A3C" fill-opacity=".28" stroke="none"/>
+<ellipse cx="152" cy="158" rx="21" ry="15" fill="#B44A3C" fill-opacity=".28" stroke="none"/>
+<path d="M146 161 C134 160, 118 156, 108 150" stroke="#B44A3C" stroke-opacity=".52" stroke-width="10" stroke-linecap="round" fill="none"/>
+<g stroke="#B44A3C" stroke-opacity=".52" stroke-width="8.5" stroke-linecap="round" fill="none">
+  <path d="M139 150 C137 134, 136 122, 137 112"/>
+  <path d="M149 148 C148 130, 148 116, 149 104"/>
+  <path d="M159 149 C161 132, 162 120, 162 110"/>
+  <path d="M167 154 C171 142, 173 132, 172 124"/>
+</g>
 </svg>`,
 /* 六 · 乌龟大师：一根弯头的木拐杖 + 落下的桃花 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-linecap="round" stroke-linejoin="round">
-<path d="M88 56 C76 42, 56 46, 56 62 C56 76, 70 80, 79 70" stroke-width="8.5" fill="none"/>
-<path d="M88 58 C92 96, 96 130, 100 168" stroke-width="8.5" fill="none"/>
-<path d="M100 168 L104 186" stroke-width="6"/>
-<path d="M99 178 L108 178" stroke-width="2.6"/>
-<ellipse cx="92" cy="104" rx="5" ry="8" fill="#2C2C2A" fill-opacity=".1" stroke-width="1.4"/>
-<ellipse cx="97" cy="146" rx="4.5" ry="7" fill="#2C2C2A" fill-opacity=".1" stroke-width="1.4"/>
-<path d="M64 60 q-10 2 -13 12" stroke-width="1.8"/>
-<path d="M96 118 q13 3 15 13" stroke-width="1.8"/>
+<path d="M80 22 C84 32, 89 46, 93 60 C91 100, 90 140, 92 183 L106 183 C108 140, 107 100, 105 60 C109 46, 114 32, 118 18 C119 22, 116 25, 112 26 C108 38, 103 50, 100 62 C97 50, 93 38, 89 26 C86 25, 82 24, 80 22 Z" fill="#2C2C2A" fill-opacity=".07" stroke-width="2.6"/>
+<ellipse cx="98" cy="112" rx="4.5" ry="8" fill="#2C2C2A" fill-opacity=".1" stroke-width="1.4"/>
+<ellipse cx="99" cy="158" rx="4" ry="6.5" fill="#2C2C2A" fill-opacity=".1" stroke-width="1.4"/>
+<path d="M96 80 C98 108, 97 136, 98 162" stroke-width="1.1" stroke-opacity=".35"/>
+<path d="M103 88 C105 116, 104 144, 105 170" stroke-width="1.1" stroke-opacity=".28"/>
+<path d="M93 176 L105 176" stroke-width="1.4" stroke-opacity=".4"/>
 <g transform="translate(152 68)" stroke-width="1.6">
   <ellipse cy="-13" rx="6.5" ry="10" fill="#2C2C2A" fill-opacity=".07"/>
   <ellipse cy="-13" rx="6.5" ry="10" fill="#2C2C2A" fill-opacity=".07" transform="rotate(72)"/>
@@ -353,27 +366,34 @@ const FIG = [
   <path d="M93 166 q7 9 14 0 Z" fill="#2C2C2A" fill-opacity=".1"/>
 </g>
 <g transform="rotate(-8 148 140)">
-  <path d="M120 148 L120 112 L172 112 L172 148 Z" fill="#2C2C2A" fill-opacity=".05"/>
-  <path d="M120 112 L172 112" stroke-width="2.6"/>
-  <path d="M132 122 L132 142 M144 122 L144 142 M156 122 L156 142" stroke-width="1.4" stroke-opacity=".45"/>
-  <rect x="118" y="148" width="56" height="22" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
-  <circle cx="122" cy="159" r="11" fill="#2C2C2A" fill-opacity=".05"/>
-  <circle cx="122" cy="159" r="5" fill="#2C2C2A" fill-opacity=".08"/>
-  <circle cx="170" cy="159" r="11" fill="#2C2C2A" fill-opacity=".05"/>
-  <circle cx="170" cy="159" r="5" fill="#2C2C2A" fill-opacity=".08"/>
-  <path d="M146 148 L146 170" stroke-width="1.6" stroke-opacity=".5"/>
-  <path d="M141 156 q5 8 10 0" stroke-width="1.5"/>
+  <path d="M122 124 C136 121, 152 127, 166 124 C175 123, 180 129, 177 136 C175 143, 167 147, 158 146 C144 151, 132 149, 122 150 Z" fill="#2C2C2A" fill-opacity=".05"/>
+  <path d="M122 124 C136 121, 152 127, 166 124" stroke-width="2.4"/>
+  <path d="M166 124 C175 123, 180 129, 177 136" stroke-width="2.2"/>
+  <path d="M173 128 C178 130, 178 136, 174 139" stroke-width="1.1" stroke-opacity=".45"/>
+  <path d="M122 150 C132 149, 144 151, 158 146" stroke-width="2.2"/>
+  <path d="M132 130 L132 143 M142 129 L142 144 M152 130 L152 144 M162 128 L162 141" stroke-width="1.3" stroke-opacity=".4"/>
+  <path d="M124 133 C138 138, 154 134, 172 138" stroke-width="1" stroke-opacity=".28"/>
+  <rect x="106" y="124" width="16" height="26" rx="4" fill="#2C2C2A" fill-opacity=".06"/>
+  <ellipse cx="114" cy="124" rx="8" ry="4" fill="#2C2C2A" fill-opacity=".08"/>
+  <path d="M108 124 A6 3 0 1 1 120 124" stroke-width="1.2" stroke-opacity=".5"/>
+  <path d="M111 125 A3 1.6 0 1 1 117 125" stroke-width="1" stroke-opacity=".38"/>
+  <path d="M106 140 L122 140" stroke-width="1.6" stroke-opacity=".55"/>
 </g>
 </svg>`,
 /* 八 · 白胡子：一柄薙刀 + 一壶还没喝完的酒 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<path d="M74 64 L74 178" stroke-width="5"/>
-<path d="M68 90 L80 90 M68 95 L80 95 M68 134 L80 134 M68 139 L80 139" stroke-width="1.6" stroke-opacity=".55"/>
-<path d="M68 178 L80 178" stroke-width="3.4"/>
-<ellipse cx="74" cy="60" rx="11" ry="4.5" fill="#2C2C2A" fill-opacity=".12"/>
-<path d="M78 56 C80 30, 89 12, 117 4 L119 13 C96 22, 87 37, 85 55 Z" fill="#2C2C2A" fill-opacity=".09"/>
-<path d="M81 50 C83 30, 91 17, 110 9" stroke-width="1.3" stroke-opacity=".4"/>
-<path d="M79 56 L83 55" stroke-width="2"/>
+<path d="M64 46 C70 24, 90 8, 118 4 C123 3, 127 7, 124 12 C112 22, 96 34, 82 45 C76 50, 68 52, 65 51 Z" fill="#2C2C2A" fill-opacity=".09"/>
+<path d="M70 44 C78 30, 96 15, 118 8" stroke-width="1.2" stroke-opacity=".4"/>
+<path d="M62 53 L78 34 L84 40 L68 58 Z" fill="#2C2C2A" fill-opacity=".17"/>
+<path d="M70 38 L76 32" stroke-width="1.3" stroke-opacity=".6"/>
+<rect x="60" y="52" width="24" height="16" rx="3" fill="#2C2C2A" fill-opacity=".13"/>
+<path d="M60 58 L84 58" stroke-width="1.4" stroke-opacity=".5"/>
+<path d="M66 68 L66 168 L78 168 L78 68 Z" fill="#2C2C2A" fill-opacity=".05"/>
+<path d="M66 84 L78 84 L78 92 L66 92 Z M66 100 L78 100 L78 108 L66 108 Z M66 116 L78 116 L78 124 L66 124 Z M66 132 L78 132 L78 140 L66 140 Z M66 148 L78 148 L78 156 L66 156 Z" fill="#2C2C2A" fill-opacity=".08" stroke="none"/>
+<path d="M66 68 L66 168 M78 68 L78 168" stroke-width="2.2"/>
+<path d="M66 78 L78 78 M66 94 L78 94 M66 110 L78 110 M66 126 L78 126 M66 142 L78 142 M66 158 L78 158" stroke-width="1.5" stroke-opacity=".4"/>
+<circle cx="72" cy="176" r="8" fill="#2C2C2A" fill-opacity=".13"/>
+<path d="M66 168 L78 168" stroke-width="2.4"/>
 <ellipse cx="146" cy="150" rx="24" ry="20" fill="#2C2C2A" fill-opacity=".06"/>
 <path d="M138 132 L136 116 L156 116 L154 132 Z" fill="#2C2C2A" fill-opacity=".05"/>
 <ellipse cx="146" cy="114" rx="11" ry="4.5" fill="#2C2C2A" fill-opacity=".08"/>
