@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>登高 · 重阳</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --paper:#F7F3EC;
+  --ink:#2C2C2A;
+  --ink2:#6B665E;
+  --ink3:#9A948A;
+  --cinnabar:#B44A3C;
+  --line:rgba(44,44,42,.14);
+}
+html,body{height:100%}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC",serif;
+  line-height:1.75;
+  overflow-x:hidden;
+}
+#app{max-width:520px;margin:0 auto;min-height:100%;position:relative;padding:0 28px 40px}
+
+/* 山路进度 */
+#path{position:fixed;left:18px;top:50%;transform:translateY(-50%);height:220px;width:2px;background:var(--line);z-index:5}
+#path i{position:absolute;left:0;bottom:0;width:2px;background:var(--ink);height:0;transition:height .6s ease}
+#path b{position:absolute;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--paper);border:1.5px solid var(--ink);bottom:0;transition:bottom .6s ease}
+@media(max-width:560px){#path{display:none}}
+
+/* 屏 */
+.screen{display:none;min-height:100vh;flex-direction:column;justify-content:center;animation:in .7s ease}
+.screen.on{display:flex}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-size:12px;letter-spacing:.32em;color:var(--ink3);margin-bottom:20px}
+h1{font-size:38px;font-weight:500;letter-spacing:.1em;line-height:1.3;margin-bottom:22px}
+.lede{font-size:15px;color:var(--ink2);line-height:2.1;margin-bottom:40px}
+.lede em{font-style:normal;color:var(--cinnabar)}
+
+button.ghost{
+  align-self:flex-start;background:none;border:1px solid var(--line);color:var(--ink);
+  font-family:inherit;font-size:14px;letter-spacing:.22em;padding:11px 26px;border-radius:2px;cursor:pointer;
+  transition:.3s;
+}
+button.ghost:hover{border-color:var(--ink)}
+button.ghost:active{background:var(--ink);color:var(--paper)}
+
+/* 站点 */
+.station-no{font-size:12px;letter-spacing:.3em;color:var(--ink3);margin-bottom:26px}
+.figure{width:190px;height:190px;margin:0 auto 30px;display:block}
+.figure svg{width:100%;height:100%;display:block}
+.line{font-size:23px;line-height:1.85;font-weight:500;margin-bottom:14px;letter-spacing:.03em}
+.line2{font-size:14px;color:var(--ink2);line-height:1.9;margin-bottom:18px;padding-left:14px;border-left:2px solid var(--line)}
+.from{font-size:12px;letter-spacing:.18em;color:var(--ink3);margin-bottom:30px}
+
+.know{
+  border-top:1px solid var(--line);padding:18px 0 26px;
+}
+.know summary{
+  list-style:none;cursor:pointer;font-size:13px;letter-spacing:.2em;color:var(--ink2);
+  display:flex;align-items:center;gap:8px;
+}
+.know summary::-webkit-details-marker{display:none}
+.know summary::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--line);transition:.3s}
+.know[open] summary::before{background:var(--cinnabar)}
+.know p{font-size:13.5px;color:var(--ink2);line-height:2;margin-top:14px;animation:in .5s ease}
+
+.nav{display:flex;gap:12px;margin-top:26px}
+.nav button{flex:1;background:none;border:1px solid var(--line);color:var(--ink);font-family:inherit;
+  font-size:13px;letter-spacing:.2em;padding:12px 0;border-radius:2px;cursor:pointer;transition:.3s}
+.nav button:hover{border-color:var(--ink)}
+.nav button:disabled{opacity:.28;cursor:default}
+
+/* 山顶 */
+.top-line{font-size:20px;line-height:2;margin-bottom:26px}
+.call{
+  margin-top:34px;border:1px solid var(--ink);border-radius:2px;padding:22px;
+}
+.call p{font-size:14px;line-height:2;color:var(--ink2)}
+.call strong{color:var(--ink);font-weight:500}
+.tel{margin-top:16px;font-size:13px;color:var(--ink2);line-height:2}
+.tel span{display:block;padding:5px 0;border-bottom:1px dashed var(--line)}
+</style>
+</head>
+<body>
+
+<div id="path"><i></i><b></b></div>
+<div id="app"></div>
+
+<script>
+const STATIONS = [
+  {
+    no:"第一站", name:"傅明", from:"《我爱我家》",
+    line:"发挥余热",
+    line2:"",
+    know:"他原名贾敬贤，1945 年参加革命，离休前是个副局长。退下来那天，局里把他的办公桌挪到了妇联那屋，他回家念叨：要不然，我再到计划生育那去忍忍。<br>演他的文兴宇那年 52 岁，为了像，用白漆把头发染白，染到后来真的白了头。《我爱我家》第一集的名字，就叫《发挥余热》。"
+  },
+  {
+    no:"第二站", name:"樱友藏", from:"《樱桃小丸子》",
+    line:"我的事情，<br>千万不要忘记，小丸子。",
+    line2:"",
+    know:"小丸子的爷爷，76 岁，溺爱孙女，什么事都站在她一边。口袋里常揣一张写着地址的卡片，怕自己走丢。<br>他爱写「友藏心之俳句」，这一句是最软的一首——一个已经开始忘事的人，最怕的是被别人忘记。"
+  },
+  {
+    no:"第三站", name:"老爷爷", from:"《葫芦兄弟》",
+    line:"孩子，我是你爷爷。",
+    line2:"",
+    know:"七娃被蛇精迷了心窍，认妖精做父母，转过头来对付自己的六个哥哥。爷爷冲他喊出这句。<br>全片从头到尾，没有人叫过他的名字。他种出七个葫芦娃，最后为夺回七娃的宝葫芦，被蝎子精刺伤坠崖。<br>2026 年，是《葫芦兄弟》开播 40 周年。"
+  },
+  {
+    no:"第四站", name:"锅炉爷爷", from:"《千与千寻》",
+    line:"既然插手要做，<br>就要做到底。",
+    line2:"",
+    know:"汤屋锅炉房的主管，驼背，有六条能随意伸缩的手臂，一天到晚在干活。<br>千寻来找工做，他嘴上说人手够了，转头却对小玲说：是我的小孙女。<br>片尾他掏出一张珍藏了四十年的车票，给了一个要去远方的孩子。"
+  },
+  {
+    no:"第五站", name:"拉飞奇", from:"《狮子王》",
+    line:"过去会痛。<br>但你可以逃避，或者从中学习。",
+    line2:"",
+    know:"荣耀国的老狒狒巫师。辛巴以为是自己害死了父亲，逃走再也不敢回头。<br>拉飞奇一木杖敲醒他：过去是过去，怎么对待它，是你自己选的。<br>原句：Oh yes, the past can hurt. But the way I see it, you can either run from it, or learn from it."
+  },
+  {
+    no:"第六站", name:"乌龟大师", from:"《功夫熊猫》",
+    line:"昨天是历史，<br>明天是谜团，今天是礼物。",
+    line2:"",
+    know:"原句：Yesterday is history, tomorrow is a mystery, but today is a gift. That is why it is called the present.<br>他走的那天，留下的最后一句是：You must believe.（你要相信。）"
+  },
+  {
+    no:"第七站", name:"花弧", from:"《花木兰》",
+    line:"花家最大的荣耀，<br>就是有你这个女儿。",
+    line2:"",
+    know:"木兰的父亲，年迈仍在征兵之列，木兰代他从军。<br>这句是她回来那一天他说的。原句：The greatest gift and honor is having you for a daughter."
+  },
+  {
+    no:"第八站", name:"白胡子", from:"《海贼王》",
+    line:"全员都要活下去！<br>平安无事地回到新世界！",
+    line2:"只要上了我的船，再怎么样的笨蛋也是我的孩子。",
+    know:"这是他最后的船长命令。他站着死去，全身刀伤 267 处、子弹 152 发、炮弹 46 枚，背后一处都没有——他说过，这是一个男人的骄傲。<br>船员都叫他「老爹」。他们多半是被世界扔掉的人，是他先认下了他们。他不要财宝，他想要的从来就只是一个家。"
+  },
+  {
+    no:"第九站", name:"卡尔", from:"《飞屋环游记》",
+    line:"它只是座房子。",
+    line2:"",
+    know:"艾莉先走了。她在冒险手册的最后一页写：谢谢你陪我走过这一程，去展开下一段属于你的冒险吧。<br>很多年后，卡尔把挂满气球的房子放走的时候，说了这句。房子没了又怎样——他们一起走完的这一生，才是那场冒险。"
+  },
+  {
+    no:"山顶", name:"可可", from:"《寻梦环游记》",
+    line:"真正的死亡，<br>是世界上再没有一个人记得你。",
+    line2:"",
+    know:"原句：The real death is that no one in the world remembers you.<br>除夕、清明、中元、重阳，是中国四大祭祖节。前三个敬的都是先人，只有重阳敬的是还活着的人。<br>所以趁他还在——记得他。"
+  }
+];
+
+const CN = ["","一","二","三","四","五","六","七","八","九","十"];
+
+/* 墨色物件剪影 */
+const FIG = [
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M62 44 L100 30 L138 44" />
+<path d="M100 30 L100 62" />
+<path d="M62 44 L58 96 L76 104 L100 96 L124 104 L142 96 L138 44" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M100 96 L100 150" />
+<rect x="126" y="132" width="40" height="34" rx="3" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M166 140 q10 4 0 12" />
+<path d="M132 132 L132 126" />
+</svg>`,
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M40 96 q60 -46 120 0" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M56 96 q44 -30 88 0" />
+<path d="M100 96 L100 158" />
+<rect x="78" y="150" width="44" height="28" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M84 158 L116 158" />
+<path d="M84 166 L106 166" />
+</svg>`,
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M100 52 q-22 0 -22 22 q0 20 22 24 q22 -4 22 -24 q0 -22 -22 -22z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M100 98 L100 128" />
+<path d="M70 128 L130 128 L124 172 L76 172 Z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M78 128 q22 -14 44 0" />
+<path d="M100 52 L100 34" />
+<path d="M100 34 q10 -8 18 2" />
+</svg>`,
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M100 58 q-20 0 -20 20 q0 18 20 22 q20 -4 20 -22 q0 -20 -20 -20z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M100 100 L100 128" />
+<path d="M52 118 L148 118" />
+<path d="M52 118 L44 132 M72 118 L64 136 M100 118 L100 138 M128 118 L136 136 M148 118 L156 132" />
+<rect x="70" y="146" width="60" height="26" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M78 154 L122 154 M78 162 L110 162" />
+</svg>`,
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M138 40 L74 168" />
+<path d="M138 40 q14 -10 20 2 q-12 12 -20 -2z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M126 62 q-14 8 -22 2" />
+<path d="M110 94 q14 8 22 2" />
+<path d="M96 126 q-14 8 -22 2" />
+</svg>`,
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M126 46 L126 166" />
+<path d="M126 46 q-10 -14 2 -20 q10 8 8 20" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M126 78 q18 -10 26 4" />
+<circle cx="70" cy="112" r="30" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M70 82 L70 142 M40 112 L100 112" />
+</svg>`,
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M132 44 L132 170" />
+<path d="M132 44 q-12 -12 -2 -18 q10 6 10 18" fill="#2C2C2A" fill-opacity=".06"/>
+<circle cx="76" cy="98" r="12" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M76 110 L76 152" />
+<path d="M76 128 q-20 -6 -26 -22 M76 138 q20 -6 26 -22" />
+<path d="M44 152 q32 -12 64 0" />
+</svg>`,
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M100 34 L100 168" />
+<path d="M100 34 q22 -10 30 6 q-16 8 -30 -6z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M86 60 L114 60" />
+<path d="M100 168 L88 182 L112 182 Z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M46 92 q54 -14 108 0" />
+<path d="M46 92 q54 14 108 0" fill="#2C2C2A" fill-opacity=".06"/>
+</svg>`,
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M100 30 q-16 0 -16 16 q0 14 16 18 q16 -4 16 -18 q0 -16 -16 -16z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M100 64 L62 122" />
+<path d="M100 64 L138 122" />
+<rect x="56" y="126" width="40" height="46" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M56 148 L96 148 M70 126 L70 172" />
+<rect x="112" y="126" width="40" height="46" rx="2" stroke-dasharray="5 5"/>
+<path d="M112 148 L152 148 M126 126 L126 172" stroke-dasharray="5 5"/>
+</svg>`,
+`<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<rect x="46" y="46" width="108" height="88" rx="2" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M46 46 L154 134 M154 46 L46 134" stroke-width="1.2" stroke-opacity=".4"/>
+<circle cx="100" cy="76" r="12" fill="#2C2C2A" fill-opacity=".1"/>
+<path d="M78 116 q22 -22 44 0" fill="#2C2C2A" fill-opacity=".1"/>
+<path d="M100 134 L100 174" />
+<path d="M82 174 L118 174" />
+</svg>`
+];
+
+let cur = -1;
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML = `
+  <section class="screen on">
+    <p class="eyebrow">农历九月初九 · 重阳</p>
+    <h1>登高</h1>
+    <p class="lede">九月初九，两九相重，故曰重阳。<br>
+    古人在这一天登高、插茱萸、饮菊花酒，<br>
+    后来这一天成了<em>老人节</em>。<br><br>
+    除夕、清明、中元、重阳，是中国的四大祭祖节。<br>
+    前三个敬的都是先人，<br>
+    只有重阳，敬的是<em>还活着的人</em>。</p>
+    <button class="ghost" onclick="go(0)">往上走</button>
+  </section>`;
+}
+
+function station(i){
+  const s = STATIONS[i];
+  app.innerHTML = `
+  <section class="screen on">
+    <p class="station-no">${s.no} · 共十站</p>
+    <div class="figure">${FIG[i]}</div>
+    <p class="line">${s.line}</p>
+    ${s.line2?`<p class="line2">${s.line2}</p>`:''}
+    <p class="from">${s.from} · ${s.name}</p>
+    <details class="know">
+      <summary>知道了</summary>
+      <p>${s.know}</p>
+    </details>
+    <div class="nav">
+      <button onclick="go(${i-1})" ${i===0?'disabled':''}>往下</button>
+      <button onclick="go(${i+1})">${i===STATIONS.length-1?'登顶':'往上'}</button>
+    </div>
+  </section>`;
+}
+
+function top(){
+  app.innerHTML = `
+  <section class="screen on">
+    <p class="eyebrow">山顶</p>
+    <h1>趁他还在</h1>
+    <p class="top-line">十个老人，十句话。<br>
+    他们要的都不是同情，<br>
+    是<em>你认得他，你记得他</em>。</p>
+    <div class="call">
+      <p><strong>今天，给家里打个电话。</strong><br>
+      不用说什么大事。问一句就好：</p>
+      <div class="tel">
+        <span>「您小时候，家门口有什么？」</span>
+        <span>「您这辈子最得意的一件事是什么？」</span>
+        <span>「有没有一个人，您一直想谢谢他？」</span>
+      </div>
+      <p style="margin-top:16px">打得完的电话，别等到来不及。</p>
+    </div>
+    <div class="nav">
+      <button onclick="go(9)">回山顶</button>
+      <button onclick="cover()">从头走</button>
+    </div>
+  </section>`;
+}
+
+function go(i){
+  if(i < 0){ cover(); setPath(-1); return; }
+  if(i >= STATIONS.length){ cur = STATIONS.length-1; top(); setPath(STATIONS.length); return; }
+  cur = i;
+  station(i);
+  setPath(i+1);
+}
+
+function setPath(step){
+  const total = STATIONS.length;
+  const pct = Math.max(0, Math.min(1, step/total)) * 100;
+  document.querySelector('#path i').style.height = pct + '%';
+  document.querySelector('#path b').style.bottom = pct + '%';
+}
+
+/* 滑动翻页 */
+let sy = 0;
+document.addEventListener('touchstart', e => sy = e.touches[0].clientY, {passive:true});
+document.addEventListener('touchend', e => {
+  const dy = e.changedTouches[0].clientY - sy;
+  if(Math.abs(dy) < 60) return;
+  if(dy < 0) go(cur + 1); else go(cur - 1);
+}, {passive:true});
+document.addEventListener('keydown', e => {
+  if(e.key === 'ArrowUp' || e.key === 'ArrowRight') go(cur + 1);
+  if(e.key === 'ArrowDown' || e.key === 'ArrowLeft') go(cur - 1);
+});
+
+cover();
+setPath(0);
+</script>
+</body>
+</html>
