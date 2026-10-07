@@ -384,31 +384,51 @@ const FIG = [
   <path d="M93 166 q7 9 14 0 Z" fill="#2C2C2A" fill-opacity=".1"/>
 </g>
 </svg>`,
-/* 八 · 白胡子：他的丛云切，全长六米六，比他自己还高 · 一壶还没喝完的酒 */
+/* 八 · 白胡子：丛云切，依官方周边图重画 · 一壶还没喝完的酒 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<g transform="rotate(-10 90 110)">
-  <path d="M58 62 L94 62 L97 50 L61 50 Z" fill="#2C2C2A" fill-opacity=".13"/>
-  <path d="M94 62 L97 50" stroke-width="2"/>
-  <path d="M64 62 L64 51 M71 62 L71 51 M78 62 L78 51 M85 62 L85 51" stroke-width="1.2" stroke-opacity=".5"/>
-  <circle cx="100" cy="66" r="3.4" fill="#2C2C2A" fill-opacity=".16"/>
-  <path d="M100 69 q1 7 -2 11" stroke-width="1.2" stroke-opacity=".5"/>
-  <path d="M58 62 C58 44, 64 26, 78 14 C84 8.5, 92 5, 100 4 C96 10, 94 14, 94 18 C94 22, 97 24, 100 25 C92 32, 80 46, 76 62 Z" fill="#2C2C2A" fill-opacity=".09"/>
-  <path d="M64 58 C66 42, 72 28, 84 17" stroke-width="1.2" stroke-opacity=".4"/>
-  <path d="M72 62 C76 46, 86 32, 97 26" stroke-width="2.2" stroke-opacity=".55"/>
-  <path d="M72 58 L81 188 L85 188 L81 58 Z" fill="#2C2C2A" fill-opacity=".05"/>
-  <path d="M74 74 L82 80 M82 74 L74 80 M74.4 90 L82.4 96 M82.4 90 L74.4 96 M74.8 106 L82.8 112 M82.8 106 L74.8 112 M75.2 122 L83.2 128 M83.2 122 L75.2 128 M75.6 138 L83.6 144 M83.6 138 L75.6 144 M76 154 L84 160 M84 154 L76 160 M76.4 170 L84.4 176 M84.4 170 L76.4 176" stroke-width="1" stroke-opacity=".3"/>
-  <path d="M72 58 L81 188 M81 58 L85 188" stroke-width="2.2"/>
-  <path d="M78 184 L78 190 L86 190 L86 184 Z" fill="#2C2C2A" fill-opacity=".1"/>
-  <circle cx="82" cy="193" r="6.5" fill="#2C2C2A" fill-opacity=".14"/>
+<!-- 刀刃填色（大弧单弯刃区域） -->
+<path d="M178 18 C190 40, 188 70, 162 88 C152 94, 144 96, 140 92 L118 78 Z" fill="#2C2C2A" fill-opacity=".10"/>
+<!-- 刀背（直边，斜向左下） -->
+<path d="M178 18 L118 78" stroke-width="3.4"/>
+<!-- 刀刃大弧主轮廓 -->
+<path d="M178 18 C190 40, 188 70, 162 88 C152 94, 144 96, 140 92" stroke-width="3"/>
+<!-- 鎬线（刀身中线） -->
+<path d="M176 24 Q158 50, 138 80" stroke-width="1.2" stroke-opacity=".35"/>
+<!-- 刃口暗纹（锯齿/火焰形，半月尖向刀尖方向） -->
+<g fill="#2C2C2A" fill-opacity=".62" stroke="none">
+  <path d="M176 26 L188 30 L180 36 Z"/>
+  <path d="M180 42 L191 46 L183 52 Z"/>
+  <path d="M182 58 L191 60 L182 66 Z"/>
+  <path d="M180 72 L188 74 L178 80 Z"/>
+  <path d="M174 84 L184 86 L172 91 Z"/>
 </g>
-<g>
-  <path d="M138 148 C132 152, 130 162, 131 172 C132 182, 136 188, 143 189 C151 190, 156 184, 157 174 C158 163, 155 153, 149 148 C146 146, 141 146, 138 148 Z" fill="#2C2C2A" fill-opacity=".06"/>
-  <path d="M141 148 L140 136 L147 136 L146 148 Z" fill="#2C2C2A" fill-opacity=".06"/>
-  <ellipse cx="143.5" cy="136" rx="5" ry="2.4" fill="#2C2C2A" fill-opacity=".1"/>
-  <path d="M139 160 q4 3 9 0" stroke-width="1.2" stroke-opacity=".4"/>
-  <path d="M164 172 L176 172 L175 184 Q170 187 165 184 Z" fill="#2C2C2A" fill-opacity=".06"/>
-  <ellipse cx="170" cy="172" rx="6" ry="2.2" fill="#2C2C2A" fill-opacity=".1"/>
+<!-- 鎺：梯形（上宽下窄） -->
+<path d="M118 78 L140 92 L134 110 L122 100 Z" fill="#2C2C2A" fill-opacity=".18" stroke-width="2.8"/>
+<!-- 鎺表面斜纹（仿麦穗纹） -->
+<path d="M124 86 L137 93 M125 92 L138 98 M126 99 L137 104" stroke-width="1.2" stroke-opacity=".5"/>
+<!-- 鎺下正中圆球小坠 -->
+<path d="M128 110 L128 117" stroke-width="1.6"/>
+<circle cx="128" cy="121" r="4.5" fill="#2C2C2A" fill-opacity=".22" stroke-width="2"/>
+<!-- 杆身（从鎺底向左下延伸） -->
+<path d="M122 100 L52 175 M134 110 L64 184" stroke-width="3"/>
+<path d="M122 100 L134 110 L64 184 L52 175 Z" fill="#2C2C2A" fill-opacity=".07"/>
+<!-- 杆上横向细条纹（垂直于杆身方向） -->
+<path d="M119 110 L131 113 M114 120 L126 122 M109 130 L121 132 M104 140 L116 142 M99 150 L111 152 M94 160 L106 162 M89 170 L101 172 M84 180 L96 182" stroke-width="1.5" stroke-opacity=".6"/>
+<!-- 柄头球形 -->
+<path d="M48 178 L48 192 M58 178 L58 192" stroke-width="3"/>
+<path d="M44 178 Q53 173 62 178 L62 192 Q53 197 44 192 Z" fill="#2C2C2A" fill-opacity=".22" stroke-width="3"/>
+<circle cx="53" cy="185" r="3" fill="#2C2C2A" fill-opacity=".35"/>
+<!-- 一壶还没喝完的酒 + 一只小酒杯 -->
+<g transform="rotate(8 158 158)">
+  <ellipse cx="158" cy="158" rx="22" ry="18" fill="#2C2C2A" fill-opacity=".06"/>
+  <path d="M148 140 L150 124 L166 124 L168 140 Z" fill="#2C2C2A" fill-opacity=".06"/>
+  <ellipse cx="158" cy="122" rx="9" ry="3.5" fill="#2C2C2A" fill-opacity=".10"/>
+  <path d="M158 122 q8 12 2 24" stroke-width="1.2" stroke-opacity=".45"/>
+  <path d="M180 150 q9 5 8 14 q-1 9 -10 9" stroke-width="2"/>
 </g>
+<path d="M138 188 q12 -14 24 0 Z" fill="#2C2C2A" fill-opacity=".06"/>
+<path d="M138 188 L162 188" stroke-width="1.6"/>
+<path d="M146 178 L158 178" stroke-width="1.2" stroke-opacity=".4"/>
 </svg>`,
 /* 九 · 卡尔：两把椅子，一把空了 + 飘远的气球 */
 `<svg viewBox="0 0 200 200" fill="none" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
