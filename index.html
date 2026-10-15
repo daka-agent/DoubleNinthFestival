@@ -128,7 +128,36 @@ button.ghost:active{background:var(--ink);color:var(--paper)}
 .call strong{color:var(--ink);font-weight:500}
 .tel{margin-top:16px;font-size:13px;color:var(--ink2);line-height:2}
 .tel span{display:block;padding:5px 0;border-bottom:1px dashed var(--line)}
-</style>
+
+/* ===== 分享卡片浮层（sc- 前缀，避免与作品样式撞车）===== */
+.sc-sheet{position:fixed;inset:0;background:rgba(30,28,25,.74);z-index:60;
+  display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;
+  padding:26px 16px 44px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.sc-sheet[hidden]{display:none}
+.sc-box{width:100%;max-width:400px}
+.sc-img{width:100%;border-radius:4px;display:block;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.sc-hint{margin:14px 0 0;text-align:center;font-size:13px;color:#F3EDE3;letter-spacing:1px}
+.sc-hint b{color:#fff}
+.sc-hint2{margin:6px 0 0;text-align:center;font-size:12px;color:rgba(243,237,227,.66);line-height:1.7}
+.sc-hint2 b{color:#EADFC9}
+.sc-cap{width:100%;margin:16px 0 0;padding:12px;border-radius:3px;border:1px solid rgba(255,255,255,.24);
+  background:rgba(255,255,255,.07);color:#F6F1E8;font:inherit;font-size:13px;line-height:1.75;
+  resize:vertical;min-height:88px}
+.sc-row{display:flex;gap:10px;margin-top:10px}
+.sc-row button{flex:1;margin:0;padding:13px 0;background:none;border:1px solid rgba(255,255,255,.45);
+  border-radius:2px;color:#F6F1E8;font:inherit;font-size:14px;letter-spacing:2px;cursor:pointer;transition:.3s}
+.sc-row button:active{background:#F6F1E8;color:#2C2C2A}
+.sc-close{display:block;margin:18px auto 0;background:none;border:none;color:rgba(255,255,255,.6);
+  font:inherit;font-size:13px;cursor:pointer}
+.sc-entry{display:block;width:100%;margin-top:12px;background:none;border:1px solid var(--line);
+  border-radius:2px;color:var(--ink);font:inherit;font-size:13px;letter-spacing:.2em;padding:12px 0;cursor:pointer;transition:.3s}
+.sc-entry:hover{border-color:var(--ink)}
+.sc-entry:active{background:var(--ink);color:var(--paper)}
+.sc-toast{position:fixed;left:50%;bottom:36px;transform:translateX(-50%) translateY(10px);
+  background:rgba(30,28,25,.94);color:#fff;padding:10px 18px;border-radius:3px;font-size:13px;
+  opacity:0;transition:.25s;pointer-events:none;z-index:99}
+.sc-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
 </head>
 <body data-page-node-id="9cTVyJw9BdzxgICfeL6278">
 
@@ -557,6 +586,7 @@ function summit(){
       <button onclick="go(9)">下山</button>
       <button onclick="cover()">从头走</button>
     </div>
+    <button class="sc-entry" id="btnShare">走完了 · 生成一张我的卡片</button>
   </section>`;
 }
 
@@ -605,6 +635,252 @@ document.addEventListener('keydown', e => {
 
 cover();
 setPath(0);
+</script>
+
+<div class="sc-sheet" id="scSheet" hidden>
+  <div class="sc-box">
+    <img class="sc-img" id="scImg" alt="分享卡片">
+    <p class="sc-hint"><b>长按图片</b> · 保存或发给朋友</p>
+    <p class="sc-hint2">长按没反应（部分安卓微信会这样）→ 直接<b>截屏</b>，卡片已铺满屏幕</p>
+    <textarea class="sc-cap" id="scCap"></textarea>
+    <div class="sc-row">
+      <button id="scCopy">复制文案</button>
+      <button id="scAgain">换一句</button>
+    </div>
+    <button class="sc-close" id="scClose">关闭</button>
+  </div>
+</div>
+<div class="sc-toast" id="scToast"></div>
+
+<script>
+/* ===== 分享卡片模块：canvas 现画 + 静态二维码，无任何外部依赖 ===== */
+window.ShareCard = (function(){
+  'use strict';
+  var QR_N = 33;
+  var QR_BITS = "111111100101000110011001001111111100000100100000110101100001000001101110101111101010000110001011101101110101101100000110011101011101101110101110101110001111001011101100000101001101000010100101000001111111101010101010101010101111111000000001111000010111110000000000101111100000111001010010101111100100011010001010001111101101101101110100100011011111001010010010110011101010010010011111100100011101111010100100001010001010010011000100011001101010101100101001001011011111110011110110101010011110110001010010111000100100111111011100111001111000001101000010110110001101000001011000010011101001101101001101110010101110100100001110110110111011000101100011111100111110011001100010101000110011010111010100001001001111110001101000001101101100101111111000010110010001110100110011011001010011110000111110101000110110010001010010111110100000000001101101011110000100010111111111100110010101000111101010110100000101010010011101101100011111101110101001101010000000111111011101110101110001100100001110011011101110101111110111101010101100000100000100101010100111100010011100111111101111001101111011101100010";
+  var QR_URL = "https://daka-agent.github.io/DoubleNinthFestival/";
+
+  var WORK = {
+    title: '登 高',
+    sub: '九折山路 · 十位老人 · 十句话',
+    path: 'DoubleNinthFestival',
+    lines: [
+      '有些老人，你不认得他，他就真的不见了。',
+      '重阳是四大祭祖节里，唯一敬活人的那一个。',
+      '趁他们还在——记得他们。'
+    ]
+  };
+  var C = { paper:'#F7F3EC', ink:'#2C2C2A', ink2:'#575249', ink3:'#7A746A',
+            line:'rgba(44,44,42,.14)', cinnabar:'#B44A3C' };
+  var SERIF = '"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC",serif';
+  var T0 = Date.now();
+  var lineIdx = 0;
+
+  var cv = document.createElement('canvas');
+  cv.width = 750; cv.height = 1180;
+  /* 无 canvas 环境（如 jsdom）降级：getContext 返回 null，不画但不报错 */
+  var ctx = null;
+  try { ctx = cv.getContext('2d'); } catch(e){}
+
+  function fmtTime(s){
+    var m = Math.floor(s/60), r = s%60;
+    return (m ? m+' 分 ' : '') + r + ' 秒';
+  }
+
+  function drawQR(x, y, size){
+    var quiet = 4, total = QR_N + quiet*2, unit = size/total;
+    ctx.fillStyle = C.paper; ctx.fillRect(x, y, size, size);
+    ctx.fillStyle = C.ink;
+    for(var r=0;r<QR_N;r++){
+      for(var c=0;c<QR_N;c++){
+        if(QR_BITS.charAt(r*QR_N+c) === '1'){
+          ctx.fillRect(x+(c+quiet)*unit, y+(r+quiet)*unit, Math.ceil(unit), Math.ceil(unit));
+        }
+      }
+    }
+  }
+
+  /* 插画：四层叠山 + 九折山径 + 十个站（最后一个朱红） */
+  function ridge(x, y, w, h, base, amp, alpha){
+    ctx.beginPath();
+    ctx.moveTo(x, y+h);
+    ctx.lineTo(x, y+base);
+    var n = 6;
+    for(var i=0;i<n;i++){
+      var x0 = x + w*i/n, x1 = x + w*(i+1)/n;
+      var cx = x0 + w/(2*n);
+      var cy = y + base - (i%2 ? amp : -amp*0.6);
+      ctx.quadraticCurveTo(cx, cy, x1, y+base-(i%2 ? amp*0.2 : amp*0.35));
+    }
+    ctx.lineTo(x+w, y+h);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(44,44,42,'+alpha+')';
+    ctx.fill();
+  }
+
+  function drawScene(x, y, w, h){
+    ridge(x, y, w, h, h*0.30, 16, .042);
+    ridge(x, y, w, h, h*0.46, 20, .062);
+    ridge(x, y, w, h, h*0.62, 24, .09);
+    ridge(x, y, w, h, h*0.78, 28, .13);
+    /* 九折山径 */
+    var pts = [];
+    for(var i=0;i<=9;i++){
+      var t = i/9;
+      pts.push([ x + (i%2 ? w*0.66 : w*0.30), y + h - t*h*0.88 ]);
+    }
+    ctx.save();
+    ctx.strokeStyle = 'rgba(44,44,42,.30)';
+    ctx.lineWidth = 1.8; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for(var j=1;j<pts.length;j++) ctx.lineTo(pts[j][0], pts[j][1]);
+    ctx.stroke();
+    ctx.restore();
+    /* 十个站：最后一个朱红 */
+    for(var k=0;k<pts.length;k++){
+      var p = pts[k], last = (k === pts.length-1);
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], last ? 6 : 3.6, 0, Math.PI*2);
+      ctx.fillStyle = last ? C.cinnabar : C.paper;
+      ctx.fill();
+      ctx.strokeStyle = last ? C.cinnabar : 'rgba(44,44,42,.45)';
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+    }
+    /* 山脚一线 */
+    ctx.beginPath();
+    ctx.moveTo(x, y+h); ctx.lineTo(x+w, y+h);
+    ctx.strokeStyle = 'rgba(44,44,42,.25)'; ctx.lineWidth = 1.5; ctx.stroke();
+  }
+
+  function drawQuote(s, y, maxW){
+    /* 逐档缩字号试单行；都不行再换行，且不让末行只剩 1-2 个孤字 */
+    var sizes = [30, 28, 26, 24, 22];
+    for(var i=0;i<sizes.length;i++){
+      ctx.font = sizes[i]+'px '+SERIF;
+      if(ctx.measureText(s).width <= maxW){
+        ctx.fillStyle = C.ink; ctx.textAlign = 'center';
+        ctx.fillText(s, 375, y);
+        return;
+      }
+    }
+    ctx.font = '26px '+SERIF; ctx.fillStyle = C.ink;
+    centerText(s, y, '26px '+SERIF, C.ink, maxW);
+  }
+
+  function centerText(s, y, font, color, maxW){
+    ctx.font = font; ctx.fillStyle = color; ctx.textAlign = 'center';
+    if(!maxW){ ctx.fillText(s, 375, y); return; }
+    var line = '', out = [];
+    for(var i=0;i<s.length;i++){
+      if(ctx.measureText(line+s[i]).width > maxW && out.length < 3){ out.push(line); line = s[i]; }
+      else line += s[i];
+    }
+    out.push(line);
+    /* 末行孤字（≤2 字）→ 从上一行挪一个字下来 */
+    if(out.length > 1 && out[out.length-1].length <= 2){
+      var prev = out[out.length-2];
+      out[out.length-1] = prev.slice(-1) + out[out.length-1];
+      out[out.length-2] = prev.slice(0, -1);
+    }
+    for(var k=0;k<out.length;k++) ctx.fillText(out[k], 375, y + k*Math.round(parseInt(font,10)*1.5));
+  }
+
+  function drawCard(){
+    if(!ctx) return;
+    var W = 750, H = 1180;
+    ctx.fillStyle = C.paper; ctx.fillRect(0, 0, W, H);
+    /* 纸纹噪点 */
+    for(var i=0;i<260;i++){
+      ctx.fillStyle = 'rgba(44,44,42,'+(0.012 + Math.random()*0.022)+')';
+      ctx.fillRect(Math.random()*W, Math.random()*H, 1.6, 1.6);
+    }
+    /* 顶部小标 */
+    ctx.textAlign = 'left';
+    ctx.font = '22px '+SERIF; ctx.fillStyle = C.ink3;
+    ctx.fillText('重 阳 · 九 折 山 路', 60, 78);
+    ctx.beginPath(); ctx.moveTo(60, 100); ctx.lineTo(W-60, 100);
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.stroke();
+
+    /* 标题 */
+    ctx.textAlign = 'center';
+    ctx.font = '58px '+SERIF; ctx.fillStyle = C.ink;
+    ctx.fillText(WORK.title, W/2, 178);
+    ctx.font = '26px '+SERIF; ctx.fillStyle = C.ink2;
+    ctx.fillText(WORK.sub, W/2, 222);
+
+    /* 插画区 */
+    drawScene(60, 275, W-120, 425);
+
+    /* 一句能替他说的话：先缩字号保单行，实在放不下再换行（平衡孤字） */
+    drawQuote('「'+WORK.lines[lineIdx]+'」', 745, W-150);
+
+    /* 玩家的痕迹 */
+    ctx.textAlign = 'center';
+    ctx.font = '30px '+SERIF; ctx.fillStyle = C.ink;
+    ctx.fillText('我走完了这条九折山路', W/2, 900);
+    ctx.font = '24px '+SERIF; ctx.fillStyle = C.ink2;
+    ctx.fillText('十位老人 · 用时 '+fmtTime(Math.max(1, Math.round((Date.now()-T0)/1000))), W/2, 940);
+
+    /* 二维码 */
+    drawQR(60, 1010, 108);
+    ctx.textAlign = 'left';
+    ctx.font = '24px '+SERIF; ctx.fillStyle = C.ink;
+    ctx.fillText('扫一扫，也走一趟', 190, 1046);
+    ctx.font = '20px '+SERIF; ctx.fillStyle = C.ink3;
+    ctx.fillText('daka-agent.github.io/'+WORK.path, 190, 1080);
+
+    /* 版权 */
+    ctx.textAlign = 'right';
+    ctx.font = '20px '+SERIF; ctx.fillStyle = C.ink3;
+    ctx.fillText('Designed by daka', W-60, H-18);
+  }
+
+  function toast(msg){
+    var t = document.getElementById('scToast');
+    t.textContent = msg; t.classList.add('on');
+    setTimeout(function(){ t.classList.remove('on'); }, 1800);
+  }
+
+  function capText(){
+    return WORK.lines[lineIdx] + '\n——《登高 · 重阳》九折山路，十位老人\n' + QR_URL;
+  }
+
+  function open(){
+    drawCard();
+    document.getElementById('scImg').src = cv.toDataURL('image/png');
+    document.getElementById('scCap').value = capText();
+    document.getElementById('scSheet').hidden = false;
+  }
+
+  /* 入口按钮在山顶页里是动态生成的，用事件委托绑，避免加载时取不到 */
+  document.addEventListener('click', function(e){
+    if(e.target && e.target.id === 'btnShare') open();
+  });
+  document.getElementById('scClose').addEventListener('click', function(){
+    document.getElementById('scSheet').hidden = true;
+  });
+  document.getElementById('scSheet').addEventListener('click', function(e){
+    if(e.target === this) this.hidden = true;
+  });
+  document.getElementById('scAgain').addEventListener('click', function(){
+    lineIdx = (lineIdx + 1) % WORK.lines.length;
+    drawCard();
+    document.getElementById('scImg').src = cv.toDataURL('image/png');
+    document.getElementById('scCap').value = capText();
+  });
+  document.getElementById('scCopy').addEventListener('click', function(){
+    var ta = document.getElementById('scCap');
+    ta.select(); ta.setSelectionRange(0, 99999);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch(e){ ok = false; }
+    if(!ok && navigator.clipboard){ navigator.clipboard.writeText(ta.value); ok = true; }
+    toast(ok ? '文案已复制' : '复制失败，长按选中文字即可');
+  });
+
+  return { open: open, drawCard: drawCard };
+})();
 </script>
 </body>
 </html>
