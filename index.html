@@ -10,8 +10,8 @@
 :root{
   --paper:#F7F3EC;
   --ink:#2C2C2A;
-  --ink2:#6B665E;
-  --ink3:#9A948A;
+  --ink2:#575249;
+  --ink3:#7A746A;
   --cinnabar:#B44A3C;
   --line:rgba(44,44,42,.14);
 }
@@ -38,6 +38,10 @@ body{
 .m4{height:15%;bottom:55%;opacity:.042}
 
 #app{max-width:520px;margin:0 auto;min-height:100%;position:relative;z-index:1;padding:0 28px 40px}
+/* 字浮在纸上：给正文一圈纸色底衬，压住背后山影，提升可读性 */
+#app p,#app h1,#app strong,#app summary,#app .tel span,#app .station-no span{
+  text-shadow:0 0 7px var(--paper),0 0 3px var(--paper),0 0 2px var(--paper);
+}
 
 /* 九折山径 */
 #path{position:fixed;left:10px;top:50%;transform:translateY(-50%);width:44px;height:280px;z-index:5}
@@ -46,7 +50,19 @@ body{
 #pdone{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round}
 #pdot{fill:var(--cinnabar);transition:cx .8s cubic-bezier(.22,.61,.36,1),cy .8s cubic-bezier(.22,.61,.36,1)}
 #ptop{font-family:inherit;font-size:10px;fill:#9A948A;letter-spacing:.1em}
-@media(max-width:600px){#path{display:none}}
+@media(max-width:600px){
+  #path{display:none}
+  /* 小屏：次级灰再压深一档、山影减淡、正文放大半档 */
+  :root{--ink2:#4F4A43;--ink3:#6E6960}
+  #scene{opacity:.82}
+  .line{font-size:24px}
+  .lede{font-size:16px}
+  .figcap{font-size:12px}
+  .from{font-size:12.5px}
+  .know p{font-size:14px}
+  .call p{font-size:14.5px}
+  .tel{font-size:13.5px}
+}
 
 /* 屏 */
 .screen{display:none;min-height:100vh;flex-direction:column;justify-content:center}
