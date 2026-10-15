@@ -25,7 +25,7 @@ body{
 }
 
 /* 层叠山景：越往上走，脚下的山沉得越快，露出更远的一层 */
-#scene{position:fixed;left:0;right:0;bottom:0;height:56vh;z-index:0;pointer-events:none}
+#scene{position:fixed;left:0;right:0;bottom:0;height:56vh;z-index:0;pointer-events:none;overflow:hidden}
 .mt{
   position:absolute;left:-6%;right:-6%;bottom:0;transform-origin:50% 100%;
   transform:translateY(0) scaleX(1);
@@ -490,7 +490,7 @@ function cover(){
     只有重阳，敬的是<em>还活着的人</em>。<br><br>
     今天走一趟<em>九折山路</em>。<br>
     路上有十个老人，你或许认得他们。</p>
-    <button class="ghost" onclick="go(0)">往上走</button>
+    <button class="ghost" onclick="go(0)">上山</button>
   </section>`;
 }
 
@@ -509,8 +509,8 @@ function station(i){
       <p>${s.know}</p>
     </details>
     <div class="nav">
-      <button onclick="go(${i-1})" ${i===0?'disabled':''}>往下</button>
-      <button onclick="go(${i+1})">${i===STATIONS.length-1?'到山顶':'往上'}</button>
+      <button onclick="go(${i-1})" ${i===0?'disabled':''}>下山</button>
+      <button onclick="go(${i+1})">${i===STATIONS.length-1?'登顶':'上山'}</button>
     </div>
   </section>`;
 }
@@ -535,7 +535,7 @@ function summit(){
       <p style="margin-top:16px">打得完的电话，别等到来不及。</p>
     </div>
     <div class="nav">
-      <button onclick="go(9)">往下</button>
+      <button onclick="go(9)">下山</button>
       <button onclick="cover()">从头走</button>
     </div>
   </section>`;
