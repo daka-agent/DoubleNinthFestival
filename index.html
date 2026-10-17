@@ -147,6 +147,13 @@ button.ghost:active{background:var(--ink);color:var(--paper)}
 .sc-row button{flex:1;margin:0;padding:13px 0;background:none;border:1px solid rgba(255,255,255,.45);
   border-radius:2px;color:#F6F1E8;font:inherit;font-size:14px;letter-spacing:2px;cursor:pointer;transition:.3s}
 .sc-row button:active{background:#F6F1E8;color:#2C2C2A}
+.sc-next{display:block;margin:24px 0 0;padding:15px 0 0;border-top:1px dashed rgba(255,255,255,.22);
+  text-align:center;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.sc-next-t{display:block;font-size:13.5px;letter-spacing:1px;color:#F3EDE3}
+.sc-next-t::after{content:"  \2192";color:rgba(243,237,227,.45)}
+.sc-next-s{display:block;margin-top:5px;font-size:11.5px;letter-spacing:.5px;color:rgba(243,237,227,.52)}
+.sc-next:hover .sc-next-t{color:#fff}
+.sc-next:active{opacity:.65}
 .sc-close{display:block;margin:18px auto 0;background:none;border:none;color:rgba(255,255,255,.6);
   font:inherit;font-size:13px;cursor:pointer}
 .sc-entry{display:block;width:100%;margin-top:12px;background:none;border:1px solid var(--line);
@@ -647,6 +654,10 @@ setPath(0);
       <button id="scCopy">复制文案</button>
       <button id="scAgain">换一句</button>
     </div>
+    <a class="sc-next" id="scNext" href="https://daka-agent.github.io/teachersday/" target="_blank" rel="noopener">
+      <span class="sc-next-t">还有一条路 · 《师承》</span>
+      <span class="sc-next-s">致敬童年动漫里的 11 位老师</span>
+    </a>
     <button class="sc-close" id="scClose">关闭</button>
   </div>
 </div>
@@ -861,6 +872,15 @@ window.ShareCard = (function(){
   document.getElementById('scClose').addEventListener('click', function(){
     document.getElementById('scSheet').hidden = true;
   });
+
+  /* 《师承》入口：站内走镜像，站外走 GitHub Pages */
+  var nextA = document.getElementById('scNext');
+  if(nextA){
+    var h = (location.hostname || '').toLowerCase();
+    nextA.href = (h.indexOf('dakazhang.com') >= 0)
+      ? '/works/teachersday/'
+      : 'https://daka-agent.github.io/teachersday/';
+  }
   document.getElementById('scSheet').addEventListener('click', function(e){
     if(e.target === this) this.hidden = true;
   });
